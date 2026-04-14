@@ -1,0 +1,253 @@
+/* ── Reset & Base ────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+header {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #56ccf2, #2f80ed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+}
+
+header p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+}
+
+/* ── Main ────────────────────────────────────────────────── */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* ── Card ────────────────────────────────────────────────── */
+.card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Form Group ──────────────────────────────────────────── */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── Select ──────────────────────────────────────────────── */
+select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: border 0.3s;
+}
+
+select:hover,
+select:focus {
+    border-color: #56ccf2;
+}
+
+select option {
+    background: #203a43;
+    color: #fff;
+}
+
+/* ── Upload Area ─────────────────────────────────────────── */
+.upload-area {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.upload-area:hover,
+.upload-area.drag-over {
+    border-color: #56ccf2;
+    background: rgba(86, 204, 242, 0.08);
+}
+
+.upload-placeholder .upload-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.upload-placeholder p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+.upload-placeholder small {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+}
+
+#previewImg {
+    max-width: 100%;
+    max-height: 220px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+/* ── Button ──────────────────────────────────────────────── */
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #2f80ed, #56ccf2);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 24px;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(86, 204, 242, 0.4);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Result Box ──────────────────────────────────────────── */
+.result-box {
+    background: rgba(86, 204, 242, 0.1);
+    border: 1px solid rgba(86, 204, 242, 0.3);
+    border-radius: 16px;
+    padding: 24px;
+    animation: fadeIn 0.4s ease;
+}
+
+.result-box h3 {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.result-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.result-icon {
+    font-size: 3.5rem;
+}
+
+.result-class {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #56ccf2;
+    margin-bottom: 4px;
+}
+
+.result-confidence {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 4px;
+}
+
+.result-model {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Confidence Bar ──────────────────────────────────────── */
+.confidence-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2f80ed, #56ccf2);
+    border-radius: 999px;
+    transition: width 0.8s ease;
+}
+
+/* ── Error Box ───────────────────────────────────────────── */
+.error-box {
+    background: rgba(235, 87, 87, 0.1);
+    border: 1px solid rgba(235, 87, 87, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    color: #eb5757;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Animation ───────────────────────────────────────────── */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

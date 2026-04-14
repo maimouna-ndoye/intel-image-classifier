@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel Image Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- ── Header ───────────────────────────────────────── -->
+    <header>
+        <div class="header-content">
+            <h1>🌍 Intel Image Classifier</h1>
+            <p>Classify natural scenes using Deep Learning</p>
+        </div>
+    </header>
+
+    <!-- ── Main Card ────────────────────────────────────── -->
+    <main>
+        <div class="card">
+
+            <!-- Model selector -->
+            <div class="form-group">
+                <label for="modelSelect">🤖 Select Model</label>
+                <select id="modelSelect">
+                    <option value="pytorch">PyTorch CNN</option>
+                    <option value="tensorflow">TensorFlow CNN</option>
+                </select>
+            </div>
+
+            <!-- Image upload -->
+            <div class="form-group">
+                <label for="imageInput">🖼️ Upload an Image</label>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
+                    <div class="upload-placeholder" id="uploadPlaceholder">
+                        <span class="upload-icon">📁</span>
+                        <p>Click or drag & drop an image here</p>
+                        <small>Supports JPG, PNG, WEBP</small>
+                    </div>
+                    <img id="previewImg" src="" alt="Preview" hidden>
+                </div>
+            </div>
+
+            <!-- Predict button -->
+            <button id="predictBtn" disabled>
+                <span id="btnText">🔍 Classify Image</span>
+                <span id="btnLoader" hidden>⏳ Classifying...</span>
+            </button>
+
+            <!-- Result -->
+            <div class="result-box" id="resultBox" hidden>
+                <h3>Prediction Result</h3>
+                <div class="result-content">
+                    <span class="result-icon" id="resultIcon"></span>
+                    <div class="result-details">
+                        <p class="result-class" id="resultClass"></p>
+                        <p class="result-confidence" id="resultConfidence"></p>
+                        <p class="result-model" id="resultModel"></p>
+                    </div>
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidenceFill"></div>
+                </div>
+            </div>
+
+            <!-- Error -->
+            <div class="error-box" id="errorBox" hidden>
+                <p id="errorMsg"></p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ── Footer ───────────────────────────────────────── -->
+    <footer>
+        <p>Built with PyTorch & TensorFlow — Maimouna Ndoye</p>
+    </footer>
+
+    <script>
+        const uploadArea     = document.getElementById("uploadArea");
+        const imageInput     = document.getElementById("imageInput");
+        const uploadPlaceholder = document.getElementById("uploadPlaceholder");
+        const previewImg     = document.getElementById("previewImg");
+        const predictBtn     = document.getElementById("predictBtn");
+        const btnText        = document.getElementById("btnText");
+        const btnLoader      = document.getElementById("btnLoader");
+        const resultBox      = document.getElementById("resultBox");
+        const errorBox       = document.getElementById("errorBox");
+        const modelSelect    = document.getElementById("modelSelect");
+
+        // ── Click to upload ──────────────────────────────
+        uploadArea.addEventListener("click", () => imageInput.click());
+
+        // ── Drag & drop ──────────────────────────────────
+        uploadArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            uploadArea.classList.add("drag-over");
+        });
+        uploadArea.addEventListener("dragleave", () => {
+            uploadArea.classList.remove("drag-over");
+        });
+        uploadArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove("drag-over");
+            const file = e.dataTransfer.files[0];
+            if (file) handleFile(file);
+        });
+
+        // ── File selected ────────────────────────────────
+        imageInput.addEventListener("change", () => {
+            if (imageInput.files[0]) handleFile(imageInput.files[0]);
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewImg.hidden = false;
+                uploadPlaceholder.hidden = true;
+                predictBtn.disabled = false;
+                resultBox.hidden = true;
+                errorBox.hidden  = true;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ── Predict ──────────────────────────────────────
+        predictBtn.addEventListener("click", async () => {
+            const file = imageInput.files[0];
+            if (!file) return;
+
+            // Show loader
+            btnText.hidden   = true;
+            btnLoader.hidden = false;
+            predictBtn.disabled = true;
+            resultBox.hidden = true;
+            errorBox.hidden  = true;
+
+            const formData = new FormData();
+            formData.append("image", file);
+            formData.append("model", modelSelect.value);
+
+            try {
+                const response = await fetch("/predict", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById("errorMsg").textContent = data.error;
+                    errorBox.hidden = false;
+                } else {
+                    // Display result
+                    document.getElementById("resultIcon").textContent       = data.icon;
+                    document.getElementById("resultClass").textContent      = `Class: ${data.class.toUpperCase()}`;
+                    document.getElementById("resultConfidence").textContent = `Confidence: ${data.confidence}%`;
+                    document.getElementById("resultModel").textContent      = `Model: ${data.model === "pytorch" ? "PyTorch CNN" : "TensorFlow CNN"}`;
+                    document.getElementById("confidenceFill").style.width   = `${data.confidence}%`;
+                    resultBox.hidden = false;
+                }
+            } catch (err) {
+                document.getElementById("errorMsg").textContent = "Server error. Please try again.";
+                errorBox.hidden = false;
+            }
+
+            // Reset button
+            btnText.hidden      = false;
+            btnLoader.hidden    = true;
+            predictBtn.disabled = false;
+        });
+    </script>
+
+</body>
+</html>
